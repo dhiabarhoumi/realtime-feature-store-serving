@@ -1,0 +1,25 @@
+name: "Real-Time Feature Store & Online Serving"
+dates: {start: "2024-12", end: "2025-01"}
+role_tags: [Data Engineering, MLOps, ML Engineering, Streaming]
+stack:
+  - Redpanda/Kafka
+  - Spark Structured Streaming (Flink optional)
+  - Feast (offline: Parquet/Delta; online: Redis)
+  - FastAPI, MLflow, Great Expectations, k6
+entities:
+  - user_id: {ttl_days: 7}
+  - product_id: {ttl_days: 3}
+  - session_id: {ttl_hours: 2}
+features_examples:
+  - user_views_5m, user_cr_24h, prod_ctr_24h, sess_duration_s
+kpis:
+  online_read_p95_ms: "<= 5"
+  inference_e2e_p95_ms: "<= 120 (500 RPS)"
+  parity_error_p95_pct: "< 0.5"
+evidence:
+  parity_report: "artifacts/reports/parity_report.md"
+  k6: "artifacts/reports/k6_summary.json"
+  grafana: "docker/grafana/feature_store_dashboard.json"
+limits:
+  - "Local single-broker; production requires replication & exactly-once sinks with idempotency."
+  - "Feast push sources optional; default is materialization from offline."
